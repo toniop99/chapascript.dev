@@ -1,28 +1,27 @@
 import { component$ } from "@builder.io/qwik";
 import path from "path";
 import * as fs from "fs";
-import type { StaticGenerateHandler } from "@builder.io/qwik-city";
+import type { DocumentHead, StaticGenerateHandler } from "@builder.io/qwik-city";
+import { routeLoader$ } from "@builder.io/qwik-city";
 import { useLocation } from "@builder.io/qwik-city";
 import matter from "gray-matter";
 import { marked } from "marked";
 import hljs from "highlight.js";
+import Header from "~/components/post/header";
 
-import "../../code.css"
-
-interface PostParams extends Readonly<Record<string, string>> {
-  post: string;
-}
+import "./post.css"
 
 const postsDirectory = path.join(process.cwd(), "posts");
 
 export default component$(() => {
-  const postContent = useGetPostContent();
+  const location = useLocation();
+  const postContent = useGetPostContent(location.params.post);
 
   if (!postContent) {
     return <div>Not found</div>;
   }
 
-  const processedContent = marked(postContent.content, {
+  const contentHtml = marked(postContent.content, {
     pedantic: false,
     gfm: true,
     breaks: false,
@@ -34,28 +33,36 @@ export default component$(() => {
     },
   });
 
-  const contentHtml = processedContent;
-
   return (
     <>
-      <article dangerouslySetInnerHTML={contentHtml}></article>
+      <div class="flex max-w-full my-0 mx-auto pt-0 pb-8 px-8">
+        <article id="article" itemType="http://schema.org/Article" class="max-w-4xl w-full my-0 mx-auto">
+          <div class="flex">
+            <div class="flex-1 pb-8">
+              <Header 
+                date={postContent.frontmatter?.date}
+                title={postContent.frontmatter?.title}
+                tags={postContent.frontmatter?.tags}
+              />
+              <div itemProp="articleBody" dangerouslySetInnerHTML={contentHtml}></div>
+            </div>
+          </div>
+        </article>
+      </div>
     </>
   );
 });
 
-export const useGetPostContent = () => {
-  const location = useLocation();
-  const params = location.params as PostParams;
-
+export const useGetPostContent = (post: string) => {
   // check if the post file exists.
   const fileNames = fs.readdirSync(postsDirectory);
 
-  if (!fileNames.includes(params.post + ".md")) {
+  if (!fileNames.includes(post + ".md")) {
     return null;
   }
 
   const fileContents = fs.readFileSync(
-    path.join(postsDirectory, params.post + ".md"),
+    path.join(postsDirectory, post + ".md"),
     "utf8"
   );
 
@@ -66,6 +73,43 @@ export const useGetPostContent = () => {
     content: matterResult.content
   };
 };
+
+export const useGetHeadData = routeLoader$((ev) => {
+  const post = ev.params.post
+  const postContent = useGetPostContent(post);
+
+  if (!postContent) {
+    return {
+      title: 'Not found',
+      meta: [
+        {
+          name: 'description',
+          content: 'Not found',
+        }
+      ]
+    }
+  }
+
+  return {
+    title: postContent.frontmatter?.title ?? 'Post',
+    meta: [
+      {
+        name: 'description',
+        content: postContent.frontmatter?.description ?? 'Post',
+      }
+    ]
+  }
+
+});
+
+export const head: DocumentHead = ({resolveValue}) => {
+  const headData = resolveValue(useGetHeadData);
+  return {
+    title: headData.title,
+    meta: headData.meta,
+  }
+
+}
 
 export const onStaticGenerate: StaticGenerateHandler = () => {
   const fileNames = fs.readdirSync(postsDirectory);
