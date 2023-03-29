@@ -15,10 +15,8 @@
  */
 
 :root {
-  --qwik-dark-blue: #006ce9;
-  --qwik-light-blue: #18b6f6;
-  --qwik-light-purple: #ac7ff4;
-  --qwik-dark-purple: #713fc2;
+  --light-purple: #ac7ff4;
+  --dark-purple: #713fc2;
 }
 
 body {
@@ -65,7 +63,7 @@ h1.hero {
 }
 
 h2 {
-  color: var(--qwik-dark-purple);
+  color: var(--dark-purple);
 }
 
 input[type="text"],
@@ -84,7 +82,7 @@ button {
 
 button:hover {
   background-color: white;
-  color: var(--qwik-dark-purple);
+  color: var(--dark-purple);
 }
 
 button.small {

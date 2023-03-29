@@ -1,11 +1,103 @@
 #article {
     color: white;
+    font-size: 1.2rem;
 }
+
 #article h1 {
     font-size: 2.5rem;
     font-weight: 700;
     line-height: 1.1;
 }
+
+#article h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.1rem;
+    margin-top: 4rem;
+    margin-bottom: 2rem;
+}
+
+#article h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.1rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
+}
+
+#article h4 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1.1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+#article p {
+    margin: 0 auto;
+    margin-bottom: 1.5rem;
+    word-break: break-word;
+}
+
+#article ul {
+    margin: 0 auto;
+    margin-bottom: 1.5rem;
+    word-break: break-word;
+}
+
+#article blockquote {
+    border-left: 4px solid var(--dark-purple);
+    padding-left: 1rem;
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+}
+
+#article pre {
+    margin-bottom: 1rem;
+}
+
+#toc-container {
+    display: none;
+    color: white;
+    max-height: 90%;
+}
+
+#toc-container h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    line-height: 1.1rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+}
+
+#toc-container #toc ul {
+    list-style: none;
+    margin: 0 auto;
+    margin-bottom: 0.5rem;
+    max-width: 250px;
+}
+
+#toc-container #toc li {
+    margin-bottom: 0.3rem;
+}
+
+#toc-container #toc a {
+    font-size: 0.8rem;
+    font-weight: 500;
+    line-height: 1;
+    display: inline;
+}
+
+@media (min-width: 1300px) {
+    #toc-container {
+        display: block;
+        position: fixed;
+        right: 32px;
+    }
+}
+
 pre code.hljs {
     display: block;
     overflow-x: auto;
